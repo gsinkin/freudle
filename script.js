@@ -1,14 +1,46 @@
-const targetWords = ["baguette"];
-const dictionary = ["baguette"];
-const WORD_LENGTH = 8;
+const targetWords = ["baguette", "baguettes"];
+const dictionary = targetWords;
+const targetWord = targetWords[Math.floor(Math.random() * targetWords.length)];
+const WORD_LENGTH = targetWord.length;
 const FLIP_ANIMATION_DURATION = 500;
 const DANCE_ANIMATION_DURATION = 500;
 const keyboard = document.querySelector("[data-keyboard]");
 const alertContainer = document.querySelector("[data-alert-container]");
 const guessGrid = document.querySelector("[data-guess-grid]");
-const targetWord = "baguette";
 
+updateGrid();
 startInteraction();
+
+function updateGrid() {
+  const styleSheet = (function () {
+    // Create the <style> tag
+    const style = document.createElement("style");
+
+    // Add a media (and/or media query) here if you'd like!
+    // style.setAttribute("media", "screen")
+    // style.setAttribute("media", "only screen and (max-width : 1024px)")
+
+    // WebKit hack :(
+    style.appendChild(document.createTextNode(""));
+
+    // Add the <style> element to the page
+    document.head.appendChild(style);
+
+    return style.sheet;
+  })();
+
+  styleSheet.insertRule(
+    `.guess-grid { grid-template-columns: repeat(${WORD_LENGTH}, 4em); }`,
+    0
+  );
+
+  const guessGrid = document.getElementsByClassName("guess-grid")[0];
+  for (var index = 0; index < WORD_LENGTH * 6; index++) {
+    const tile = document.createElement("div");
+    tile.classList.add("tile");
+    guessGrid.appendChild(tile);
+  }
+}
 
 function startInteraction() {
   document.addEventListener("click", handleMouseClick);
@@ -165,7 +197,7 @@ function shakeTiles(tiles) {
 
 function checkWinLose(guess, tiles) {
   if (guess === targetWord) {
-    showAlert("You Win", 5000);
+    showAlert("You Suck!", 5000);
     danceTiles(tiles);
     stopInteraction();
     return;
